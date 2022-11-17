@@ -31,64 +31,70 @@ div
     el-divider
     Comments(:comments="commentData" @commentHandler="onCommentHalder")
   el-card.box-card(v-else)
-    h2 {{this.error}}
+    h2 {{this.errorMessage}}
     router-link(to="/") 
       el-button.button-back(type="primary") Back
 </template>
 <script>
-import Comments from '../components/Comments.vue'
-import axios from 'axios';
+import Comments from "../components/Comments.vue";
+import axios from "axios";
+import { useRoute } from 'vue-router'
+import { ref } from "vue";
 export default {
-  components: {Comments},
-  data: () => {
-    return {
-      movie: {
-        film: "",
-        genre: "",
-        studio: "",
-        score: 0,
-        profitability: 1,
-        rotten_tomatoes: 0,
-        gross: 0,
-        year: 0,
-      },
-      commentData: [],
-      error: ""
+  components: { Comments },
+  setup() {
+    const route = useRoute();
+    const movie = ref({
+      id: 0,
+      film: "",
+      genre: "",
+      studio: "",
+      score: 0,
+      profitability: 1,
+      rotten_tomatoes: 0,
+      gross: 0,
+      year: 0,
+    });
+    const commentData = ref([]);
+    const errorMessage = ref("");
+    const fetchData = () => {
+      axios
+        .get(`http://localhost:8888/movie?id=${route.params.id}`)
+        .then((res) => {
+          if (res.data.movie) {
+            movie.value = res.data.movie;
+            movie.value.profitability = movie.value.profitability.toFixed(2);
+          } else {
+            movie.value = null;
+            errorMessage.value = res.data.message;
+          }
+        });
+      axios
+        .get(`http://localhost:8888/comments?movieId=${route.params.id}`)
+        .then((res) => {
+          commentData.value = res.data.comments;
+        });
     };
-  },
-  created() {
-    axios.get(`http://localhost:8888/movie?id=${this.$route.params.id}`).then(res => {
-      if(res.data.movie) {
-        this.movie = res.data.movie;
-        this.movie.profitability = this.movie.profitability.toFixed(2);
-      } else {
-        this.movie = null;
-        this.error = res.data.message;
-      }
-    })
-    axios.get(`http://localhost:8888/comments?movieId=${this.$route.params.id}`).then(res => {
-      this.commentData = res.data.comments;
-    })
-  },
-  methods: {
-    onCommentHalder(data) {
-      let payload = {...data, movieId: this.movie.id};
+    const onCommentHalder = (data) => {
+      let payload = {...data, movieId: movie.value.id};
       axios.post("http://localhost:8888/comment", payload).then(res => {
         payload.id = res.data.id;
-        this.commentData.unshift(payload);
+        commentData.value.unshift(payload);
       })
     }
+    fetchData();
+    return { movie, commentData, errorMessage, onCommentHalder };
   }
 };
 </script>
-<style >
-.card-header{
+<style>
+.card-header {
   width: 100%;
 }
-.card-header .button-back{
+.card-header .button-back {
   float: right;
 }
-.box-card label{
+.box-card label {
   color: gray;
   margin-right: 0.5rem;
 }

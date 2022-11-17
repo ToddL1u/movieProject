@@ -14,50 +14,51 @@ div
 </template>
 <script>
 import axios from 'axios';
+import { ref, computed } from "vue";
 export default {
-  data: () => {
-    return {
-      movies: [],
-      filterStr: ""
-    }
-  },
-  computed: {
-    filterMovie() {
-      if(this.filterStr.trim().length > 0) {
-        return this.movies.filter(m => m.film.toLowerCase().includes(this.filterStr.toLowerCase()));
+  setup() {
+    const filterStr = ref("");
+    const movies = ref([]);
+    const filterMovie = computed(() => {
+      if (filterStr.value.trim().length > 0) {
+        return movies.value.filter((m) =>
+          m.film.toLowerCase().includes(filterStr.value.toLowerCase())
+        );
       }
-      return this.movies;
-    }
-  },
-  created() {
-    axios.get('http://localhost:8888/movies').then(res => {
-      this.movies = res.data.movies;
-    }).catch(err => {
-      console.log(err);
-    })
-  },
-  methods: {
-    onFilter() {
-      
-    }
+      return movies.value;
+    });
+
+    const dataFetch = () => {
+      axios
+        .get("http://localhost:8888/movies")
+        .then((res) => {
+          movies.value = res.data.movies;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    dataFetch();
+    return { filterStr, movies, filterMovie };
   }
 };
 </script>
-<style >
-.genre{
+<style>
+.genre {
   float: right;
 }
-.movie-item{
+.movie-item {
   margin-bottom: 0.5rem;
 }
-.header{
-  background: white ;
+.header {
+  background: white;
   padding: 5px;
   position: fixed;
   width: 100%;
   top: 0;
 }
-.movies{
-  margin-top: 180px;
+.movies {
+  margin-top: 150px;
+  height: calc(100% - 500px);
 }
 </style>
