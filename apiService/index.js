@@ -13,7 +13,7 @@ app.use(cors());
 
 
 app.get("/movies", (req, res) => {
-  req.con("SELECT * FROM movies", (err, rows) => {
+  req.con("SELECT id,film,genre FROM movies", (err, rows) => {
     if (err) console.log(err);
     res.json({ movies: rows });
   });

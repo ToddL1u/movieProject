@@ -1,15 +1,15 @@
 <template lang="pug">
 div
+  el-button.button-save(type="primary" @click="onSubmitHandler") Save 
   h3 Comments
+    
   el-form
     el-form-item
       el-input(v-model="username" placeholder="Your name")
     el-form-item
       el-input(v-model="comment" placeholder="Your comment")
-    el-form-item
-      el-button(type="primary" @click="onSubmitHandler") Save
   .comment-item(v-for="c in comments" :key="c.id")
-    .comment-item-user {{c.username}}
+    .comment-item-user {{c.username}}:
     .comment-item-comment {{c.comment}}
 </template>
 <script>
@@ -41,5 +41,7 @@ export default {
   padding-left: 0.5rem;
   border-left: 4px solid gray;
 }
-
+.button-save{
+  float: right;
+}
 </style>

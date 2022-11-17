@@ -4,10 +4,12 @@ div
     h1 Movies
     el-form-item
       el-input(type="text" placeholder="search film name" @blur="onFilter" v-model="filterStr")
-  .movies
+  .movies(v-show="filterMovie.length > 0")
     router-link(:to="'/movie/'+m.id" v-for="(m, index) in filterMovie" :key="m.id") 
-      el-card.movie-item {{'#'(index+1)}} {{m.film}}
+      el-card.movie-item {{'#'+(index+1)}} {{m.film}}
         el-tag.genre(type="success") {{m.genre}}
+  .movies(v-show="filterMovie.length == 0")
+    h2 there's none movie matches your search!
       
 </template>
 <script>
