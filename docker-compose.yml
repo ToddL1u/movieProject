@@ -8,8 +8,8 @@ services:
   db:
     image: toddliu/movie_db
     container_name: movie_db
-    build:
-      context: mysql
+    # build:
+    #   context: mysql
     environment:
       - MYSQL_ROOT_PASSWORD=pass.123
     ports:
@@ -21,8 +21,8 @@ services:
       - db  
     image: toddliu/movie_api
     container_name: api_service
-    build:
-      context: apiService/
+    # build:
+    #   context: apiService/
     ports:
       - 8888:8888
     networks:
@@ -31,8 +31,8 @@ services:
     image: toddliu/movie_app
     container_name: movie_app
     restart: always
-    build:
-      context: app/
+    # build:
+    #   context: app/
     ports: 
       - 8081:80
     depends_on:
