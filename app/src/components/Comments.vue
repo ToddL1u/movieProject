@@ -11,33 +11,31 @@ div
     .comment-item-user {{c.username}}:
     .comment-item-comment {{c.comment}}
 </template>
-<script>
-import { reactive, computed } from "vue";
-export default {
-  props: {
-    comments: Array,
-    commentHandler: Function,
-  },
-  setup(props, context) {
-    const comment = reactive({
-      username: "",
-      message: "",
-      isValid: computed(() => {
-        return comment.username.trim().length > 0 && comment.message.trim().length > 0;
-      }),
+<script setup>
+import { reactive, computed, defineEmits, defineProps } from "vue";
+const emit = defineEmits(["commentHandler"])
+const props = defineProps({
+  comments: Array,
+  commentHandler: Function,
+})
+const comment = reactive({
+  username: "",
+  message: "",
+  isValid: computed(() => {
+    return (
+      comment.username.trim().length > 0 && comment.message.trim().length > 0
+    );
+  }),
+});
+const onSubmitHandler = () => {
+  if (comment.isValid) {
+    emit("commentHandler", {
+      username: comment.username,
+      comment: comment.message,
     });
-    const onSubmitHandler = () => {
-      if (comment.isValid) {
-        context.emit("commentHandler", {
-          username: comment.username,
-          comment: comment.message,
-        });
-        comment.username = "";
-        comment.comment = "";
-      }
-    };
-    return { comment, onSubmitHandler };
-  },
+    comment.username = "";
+    comment.message = "";
+  }
 };
 </script>
 <style>
