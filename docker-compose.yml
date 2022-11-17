@@ -1,0 +1,40 @@
+version: '3'
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  db:
+    image: movie/db
+    container_name: movie_db
+    build:
+      context: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass.123
+    ports:
+      - 3306:3306
+    networks:
+      - app-tier      
+  api:
+    depends_on:
+      - db  
+    image: movie/api
+    container_name: api_service
+    build:
+      context: apiService/
+    ports:
+      - 8888:8888
+    networks:
+      - app-tier  
+  app:
+    image: movie/app
+    container_name: movie_app
+    restart: always
+    build:
+      context: app/
+    ports: 
+      - 8081:80
+    depends_on:
+      - api
+  
