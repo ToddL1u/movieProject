@@ -2,7 +2,8 @@
 docker compose up -d
 
 ## apiService
-node, express
+node, express<br/>
+image: toddliu/movie_api<br/>
 set up connectionPool as a middleware for db connection,
 there're 4 api in this serivce,
 1. url: movies, action: get, to fetch movie list with name, id and genre
@@ -11,7 +12,8 @@ there're 4 api in this serivce,
 4. url: comment, action: post, params: {movieId, username, comment}, to post a comment to a certain movie
 
 ## app
-vue
+vue<br/>
+image: toddliu/movie_app<br/>
 site url: http://localhost:8081
 the movies will be loading automatilly, user can use filter input to filter movies,
 if the filter doesn't match any movie, will display "there's none movie matches your search!",
@@ -19,6 +21,7 @@ click movie item can link to movie detail page, if user redirect to movie detail
 page will display error message.
 
 ## db
-mysql
+mysql<br/>
+image: toddliu/movie_db<br/>
 movie database which consistes two tables, movies and comments,
 the movie data has been pre-generated in database
